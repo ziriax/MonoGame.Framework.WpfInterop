@@ -1,0 +1,28 @@
+﻿<Window x:Class="WpfTest.MainWindow"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:wpfInterop="clr-namespace:MonoGame.Framework.WpfInterop;assembly=MonoGame.Framework.WpfInterop"
+		xmlns:wpfTest="clr-namespace:WpfTest"
+		mc:Ignorable="d"
+		Title="MainWindow" Height="768" Width="1024" MinWidth="800" MinHeight="520">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+		<wpfInterop:D3D11Host Grid.Row="0" Grid.Column="0" Width="400" Height="240" />
+		<wpfInterop:DemoScene Grid.Row="0" Grid.Column="1" Width="400" Height="240" />
+		<wpfTest:ContentScene Grid.Row="1" Grid.Column="0" Width="400" Height="240" />
+		<wpfInterop:DemoScene Grid.Row="1" Grid.Column="1" />
+		<TextBlock Grid.Row="0" Grid.Column="0" Text="D3D11Host raw:" HorizontalAlignment="Center" Foreground="Green" />
+		<TextBlock Grid.Row="0" Grid.Column="1" Text="DemoScene:" HorizontalAlignment="Center" />
+		<TextBlock Grid.Row="1" Grid.Column="0" Text="ContentScene:" HorizontalAlignment="Center" Foreground="Green" />
+		<TextBlock Grid.Row="1" Grid.Column="1" Text="DemoScene (scaled):" HorizontalAlignment="Center" />
+	</Grid>
+</Window>
