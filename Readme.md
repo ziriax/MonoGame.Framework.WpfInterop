@@ -1,6 +1,8 @@
-# MonoGame Wpf Interop
+# MonoGame WPF Interop
 
-This adds Wpf support to MonoGame.
+This adds WPF support to MonoGame (tested with version 3.5.1.1679).
+
+Note that you **need** MonoGame.Framework.WindowsDX (as this interop uses SharpDX). WPF only supports DirectX.
 
 You can host as many MonoGame controls in Wpf as you want by using D3D11Host.
 
