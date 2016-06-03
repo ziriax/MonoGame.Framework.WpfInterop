@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>MonoGame.Framework.WpfInterop</id>
+		<!-- version will be automatically replaced by MSBuild -->
+		<version>0.0.0.0</version>
+		<title>MonoGame.Framework.WpfInterop</title>
+		<authors>MarcStan</authors>
+		<description>MonoGame integration with WPF. This package provides the D3D11Host from the MonoGame WpfInteropSample.</description>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<copyright>Copyright 2016</copyright>
+		<dependencies />
+	</metadata>
+	<files>
+		<file src="MonoGame.Framework.WpfInterop.dll;MonoGame.Framework.WpfInterop.xml" target="lib\net45" />
+	</files>
+</package>
