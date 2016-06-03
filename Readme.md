@@ -11,9 +11,11 @@ https://nuget.org/packages/MonoGame.Framework.WpfInterop/
 
     PM> Install-Package MonoGame.Framework.WpfInterop
    
-By adding the NuGet package to a project it bs possible to host MonoGame inside WPF windows.
+By adding the NuGet package to a project it is possible to host MonoGame inside WPF windows.
 
 ## Example
+
+```csharp
 
 public class ContentScene : D3D11Host
 {
@@ -47,3 +49,5 @@ public class ContentScene : D3D11Host
 		base.Render(time);
 	}
 }
+
+```
