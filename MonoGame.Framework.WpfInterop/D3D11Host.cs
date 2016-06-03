@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Microsoft.Xna.Framework;
 
 namespace MonoGame.Framework.WpfInterop
 {
@@ -29,6 +30,7 @@ namespace MonoGame.Framework.WpfInterop
 		// Render timing:
 		private readonly Stopwatch _timer;
 		private TimeSpan _lastRenderingTime;
+		private TimeSpan _timeSinceStart = TimeSpan.Zero;
 
 		private bool _loaded;
 
@@ -226,7 +228,9 @@ namespace MonoGame.Framework.WpfInterop
 				_lastRenderingTime = renderingEventArgs.RenderingTime;
 
 				GraphicsDevice.SetRenderTarget(_renderTarget);
-				Render(_timer.Elapsed);
+				var diff = _timer.Elapsed - _timeSinceStart;
+				_timeSinceStart = _timer.Elapsed;
+				Render(new GameTime(_timer.Elapsed, diff));
 				GraphicsDevice.Flush();
 			}
 
@@ -262,7 +266,7 @@ namespace MonoGame.Framework.WpfInterop
 			}
 		}
 
-		public virtual void Render(TimeSpan time)
+		public virtual void Render(GameTime time)
 		{
 
 		}

@@ -12,6 +12,7 @@ namespace WpfTest
 
 		private Texture2D _texture;
 		private IGraphicsDeviceService _graphicsDeviceManager;
+		private SpriteBatch _spriteBatch;
 
 		public override void Initialize()
 		{
@@ -26,8 +27,7 @@ namespace WpfTest
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 		}
 
-		private SpriteBatch _spriteBatch;
-		public override void Render(TimeSpan time)
+		public override void Render(GameTime time)
 		{
 			GraphicsDevice.Clear(Color.Black);
 

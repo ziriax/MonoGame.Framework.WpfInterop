@@ -171,14 +171,14 @@ namespace MonoGame.Framework.WpfInterop
 		}
 
 
-		public override void Render(TimeSpan time)
+		public override void Render(GameTime time)
 		{
 			GraphicsDevice.Clear(Color.SteelBlue);
 			GraphicsDevice.RasterizerState = RasterizerState.CullNone;
 			GraphicsDevice.SetVertexBuffer(_vertexBuffer);
 
 			// Rotate cube around up-axis.
-			_basicEffect.World = Matrix.CreateRotationY((float)time.Milliseconds / 1000 * MathHelper.TwoPi) * _worldMatrix;
+			_basicEffect.World = Matrix.CreateRotationY((float)time.TotalGameTime.TotalMilliseconds / 1000 * MathHelper.TwoPi) * _worldMatrix;
 
 			foreach (var pass in _basicEffect.CurrentTechnique.Passes)
 			{
