@@ -28,6 +28,7 @@ namespace MonoGame.Framework.WpfInterop
 		private static int _referenceCount;
 
 		private D3D11Image _d3D11Image;
+		private bool _disposed;
 		private TimeSpan _lastRenderingTime;
 		private bool _loaded;
 
@@ -35,7 +36,6 @@ namespace MonoGame.Framework.WpfInterop
 		private RenderTarget2D _renderTarget;
 		private bool _resetBackBuffer;
 		private TimeSpan _timeSinceStart = TimeSpan.Zero;
-		private bool _disposed;
 
 		#endregion
 
@@ -97,6 +97,11 @@ namespace MonoGame.Framework.WpfInterop
 
 		#region Methods
 
+		public void Dispose()
+		{
+			Dispose(true);
+		}
+
 		protected virtual void Dispose(bool disposing)
 		{
 			if (_disposed)
@@ -104,16 +109,7 @@ namespace MonoGame.Framework.WpfInterop
 			_disposed = true;
 		}
 
-		public void Dispose()
-		{
-			Dispose(true);
-		}
-
 		protected virtual void Initialize()
-		{
-		}
-
-		protected virtual void Render(GameTime time)
 		{
 		}
 
@@ -126,6 +122,10 @@ namespace MonoGame.Framework.WpfInterop
 		{
 			_resetBackBuffer = true;
 			base.OnRenderSizeChanged(sizeInfo);
+		}
+
+		protected virtual void Render(GameTime time)
+		{
 		}
 
 		private static void InitializeGraphicsDevice()

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using DeviceType = SharpDX.Direct3D9.DeviceType;
 using Microsoft.Xna.Framework.Graphics;
-using SharpDX.Direct3D9;
-using DeviceType = SharpDX.Direct3D9.DeviceType;
 using PresentInterval = SharpDX.Direct3D9.PresentInterval;
+using SharpDX.Direct3D9;
+using System;
+using System.Runtime.InteropServices;
 using Texture = SharpDX.Direct3D9.Texture;
-
 
 namespace MonoGame.Framework.WpfInterop
 {
@@ -20,23 +19,22 @@ namespace MonoGame.Framework.WpfInterop
 	/// </remarks>
 	internal class D3D9 : IDisposable
 	{
-		// The code requires Windows Vista and up using the Windows Display Driver Model (WDDM). 
-		// It does not work with the Windows 2000 Display Driver Model (XDDM).
-
 		#region Fields
-		private bool _disposed;
-		private Direct3DEx _direct3D;
+
 		private DeviceEx _device;
+		private Direct3DEx _direct3D;
+		private bool _disposed;
+
 		#endregion
 
+		#region Constructors
 
-		#region Creation & Cleanup
 		/// <summary>
 		/// Initializes a new instance of the <see cref="D3D9"/> class.
 		/// </summary>
 		public D3D9()
 		{
-			// Create Direct3DEx device on Windows Vista/7/8 with a display configured to use 
+			// Create Direct3DEx device on Windows Vista/7/8 with a display configured to use
 			// the Windows Display Driver Model (WDDM). Use Direct3D on any other platform.
 			_direct3D = new Direct3DEx();
 
@@ -55,12 +53,10 @@ namespace MonoGame.Framework.WpfInterop
 				DeviceWindowHandle = GetDesktopWindow()
 			};
 
-
 			_device = new DeviceEx(_direct3D, 0, DeviceType.Hardware, IntPtr.Zero,
 								   CreateFlags.HardwareVertexProcessing | CreateFlags.Multithreaded | CreateFlags.FpuPreserve,
 								   presentparams);
 		}
-
 
 		/// <summary>
 		/// Releases unmanaged resources before an instance of the <see cref="D3D9"/> class is 
@@ -75,6 +71,9 @@ namespace MonoGame.Framework.WpfInterop
 			Dispose(false);
 		}
 
+		#endregion
+
+		#region Methods
 
 		/// <summary>
 		/// Releases all resources used by an instance of the <see cref="D3D9"/> class.
@@ -88,54 +87,6 @@ namespace MonoGame.Framework.WpfInterop
 			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
-
-
-		/// <summary>
-		/// Releases the unmanaged resources used by an instance of the <see cref="D3D9"/> class 
-		/// and optionally releases the managed resources.
-		/// </summary>
-		/// <param name="disposing">
-		/// <see langword="true"/> to release both managed and unmanaged resources; 
-		/// <see langword="false"/> to release only unmanaged resources.
-		/// </param>
-		protected virtual void Dispose(bool disposing)
-		{
-			if (!_disposed)
-			{
-				if (disposing)
-				{
-					// Dispose managed resources.
-					if (_device != null)
-					{
-						_device.Dispose();
-						_device = null;
-					}
-					if (_direct3D != null)
-					{
-						_direct3D.Dispose();
-						_direct3D = null;
-					}
-				}
-
-				// Release unmanaged resources.
-				_disposed = true;
-			}
-		}
-		#endregion
-
-
-		#region Methods
-
-		[DllImport("user32.dll", SetLastError = false)]
-		private static extern IntPtr GetDesktopWindow();
-
-
-		private void ThrowIfDisposed()
-		{
-			if (_disposed)
-				throw new ObjectDisposedException(GetType().FullName);
-		}
-
 
 		/// <summary>
 		/// Creates Direct3D 9 texture from the specified Direct3D 11 texture. 
@@ -173,6 +124,55 @@ namespace MonoGame.Framework.WpfInterop
 
 			return new Texture(_device, renderTarget.Width, renderTarget.Height, 1, Usage.RenderTarget, format, Pool.Default, ref handle);
 		}
+
+		/// <summary>
+		/// Releases the unmanaged resources used by an instance of the <see cref="D3D9"/> class 
+		/// and optionally releases the managed resources.
+		/// </summary>
+		/// <param name="disposing">
+		/// <see langword="true"/> to release both managed and unmanaged resources; 
+		/// <see langword="false"/> to release only unmanaged resources.
+		/// </param>
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!_disposed)
+			{
+				if (disposing)
+				{
+					// Dispose managed resources.
+					if (_device != null)
+					{
+						_device.Dispose();
+						_device = null;
+					}
+					if (_direct3D != null)
+					{
+						_direct3D.Dispose();
+						_direct3D = null;
+					}
+				}
+
+				// Release unmanaged resources.
+				_disposed = true;
+			}
+		}
+
+		[DllImport("user32.dll", SetLastError = false)]
+		private static extern IntPtr GetDesktopWindow();
+
+		private void ThrowIfDisposed()
+		{
+			if (_disposed)
+				throw new ObjectDisposedException(GetType().FullName);
+		}
+
+		#endregion
+
+		#region Other
+
+		// The code requires Windows Vista and up using the Windows Display Driver Model (WDDM).
+		// It does not work with the Windows 2000 Display Driver Model (XDDM).
+
 		#endregion
 	}
 }

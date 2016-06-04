@@ -6,7 +6,22 @@ namespace MonoGame.Framework.WpfInterop
 {
 	public class WpfGame : D3D11Host
 	{
+		#region Fields
+
 		private ContentManager _content;
+
+		#endregion
+
+		#region Constructors
+
+		public WpfGame()
+		{
+			Content = new ContentManager(Services);
+		}
+
+		#endregion
+
+		#region Properties
 
 		public ContentManager Content
 		{
@@ -20,20 +35,9 @@ namespace MonoGame.Framework.WpfInterop
 			}
 		}
 
-		protected virtual void LoadContent() { }
+		#endregion
 
-		protected virtual void UnloadContent() { }
-
-		public WpfGame()
-		{
-			Content = new ContentManager(Services);
-		}
-
-		protected override void Initialize()
-		{
-			base.Initialize();
-			LoadContent();
-		}
+		#region Methods
 
 		protected override void Dispose(bool disposing)
 		{
@@ -43,7 +47,21 @@ namespace MonoGame.Framework.WpfInterop
 			base.Dispose();
 		}
 
-		protected sealed override void Render(GameTime time)
+		protected virtual void Draw(GameTime gameTime)
+		{
+		}
+
+		protected override void Initialize()
+		{
+			base.Initialize();
+			LoadContent();
+		}
+
+		protected virtual void LoadContent()
+		{
+		}
+
+		protected override sealed void Render(GameTime time)
 		{
 			base.Render(time);
 
@@ -53,8 +71,14 @@ namespace MonoGame.Framework.WpfInterop
 			Draw(time);
 		}
 
-		protected virtual void Update(GameTime gameTime) { }
+		protected virtual void UnloadContent()
+		{
+		}
 
-		protected virtual void Draw(GameTime gameTime) { }
+		protected virtual void Update(GameTime gameTime)
+		{
+		}
+
+		#endregion
 	}
 }

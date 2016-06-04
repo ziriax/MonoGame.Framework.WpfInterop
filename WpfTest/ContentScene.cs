@@ -26,20 +26,6 @@ namespace WpfTest
 
 		#region Methods
 
-		protected override void Initialize()
-		{
-			base.Initialize();
-			_graphicsDeviceManager = new WpfGraphicsDeviceService(this);
-
-			Content.RootDirectory = "Content";
-			_texture = Content.Load<Texture2D>("hello");
-
-			_spriteBatch = new SpriteBatch(GraphicsDevice);
-
-			_keyboard = new WpfKeyboard(this);
-			_mouse = new WpfMouse(this);
-		}
-
 		protected override void Draw(GameTime time)
 		{
 			GraphicsDevice.Clear(_mouseDown ? Color.CornflowerBlue : Color.Black);
@@ -60,6 +46,20 @@ namespace WpfTest
 			GraphicsDevice.DepthStencilState = depth;
 			GraphicsDevice.RasterizerState = raster;
 			GraphicsDevice.SamplerStates[0] = sampler;
+		}
+
+		protected override void Initialize()
+		{
+			base.Initialize();
+			_graphicsDeviceManager = new WpfGraphicsDeviceService(this);
+
+			Content.RootDirectory = "Content";
+			_texture = Content.Load<Texture2D>("hello");
+
+			_spriteBatch = new SpriteBatch(GraphicsDevice);
+
+			_keyboard = new WpfKeyboard(this);
+			_mouse = new WpfMouse(this);
 		}
 
 		protected override void Update(GameTime time)

@@ -35,6 +35,22 @@ namespace WpfTest
 			_basicEffect = null;
 		}
 
+		protected override void Draw(GameTime time)
+		{
+			GraphicsDevice.Clear(Color.SteelBlue);
+			GraphicsDevice.RasterizerState = RasterizerState.CullNone;
+			GraphicsDevice.SetVertexBuffer(_vertexBuffer);
+
+			// Rotate cube around up-axis.
+			_basicEffect.World = Matrix.CreateRotationY((float)time.TotalGameTime.TotalMilliseconds / 1000 * MathHelper.TwoPi) * _worldMatrix;
+
+			foreach (var pass in _basicEffect.CurrentTechnique.Passes)
+			{
+				pass.Apply();
+				GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 12);
+			}
+		}
+
 		protected override void Initialize()
 		{
 			float tilt = MathHelper.ToRadians(0);  // 0 degree angle
@@ -173,22 +189,6 @@ namespace WpfTest
 
 			_vertexBuffer = new VertexBuffer(GraphicsDevice, _vertexDeclaration, cubeVertices.Length, BufferUsage.None);
 			_vertexBuffer.SetData(cubeVertices);
-		}
-
-		protected override void Draw(GameTime time)
-		{
-			GraphicsDevice.Clear(Color.SteelBlue);
-			GraphicsDevice.RasterizerState = RasterizerState.CullNone;
-			GraphicsDevice.SetVertexBuffer(_vertexBuffer);
-
-			// Rotate cube around up-axis.
-			_basicEffect.World = Matrix.CreateRotationY((float)time.TotalGameTime.TotalMilliseconds / 1000 * MathHelper.TwoPi) * _worldMatrix;
-
-			foreach (var pass in _basicEffect.CurrentTechnique.Passes)
-			{
-				pass.Apply();
-				GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 12);
-			}
 		}
 
 		#endregion
