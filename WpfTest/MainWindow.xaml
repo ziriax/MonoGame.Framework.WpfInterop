@@ -18,11 +18,12 @@
 		</Grid.ColumnDefinitions>
 		<wpfInterop:D3D11Host Grid.Row="0" Grid.Column="0" Width="400" Height="240" />
 		<wpfInterop:DemoScene Grid.Row="0" Grid.Column="1" Width="400" Height="240" />
-		<wpfTest:ContentScene Grid.Row="1" Grid.Column="0" Width="400" Height="240" />
+		<wpfTest:ContentScene Grid.Row="1" Grid.Column="0" Width="400" Height="240" Focusable="True" />
 		<wpfInterop:DemoScene Grid.Row="1" Grid.Column="1" />
 		<TextBlock Grid.Row="0" Grid.Column="0" Text="D3D11Host raw:" HorizontalAlignment="Center" Foreground="Green" />
 		<TextBlock Grid.Row="0" Grid.Column="1" Text="DemoScene:" HorizontalAlignment="Center" />
 		<TextBlock Grid.Row="1" Grid.Column="0" Text="ContentScene:" HorizontalAlignment="Center" Foreground="Green" />
+		<TextBox  Grid.Row="1" Grid.Column="0" Margin="0,20,0,0" Width="100" Height="23" HorizontalAlignment="Center" VerticalAlignment="Top" />
 		<TextBlock Grid.Row="1" Grid.Column="1" Text="DemoScene (scaled):" HorizontalAlignment="Center" />
 	</Grid>
 </Window>

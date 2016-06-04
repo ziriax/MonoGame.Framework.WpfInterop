@@ -3,22 +3,30 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Framework.WpfInterop;
+using MonoGame.Framework.WpfInterop.Input;
 
 namespace WpfTest
 {
 	public class ContentScene : D3D11Host
 	{
-		private ContentManager _content;
+		#region Fields
 
-		private Texture2D _texture;
-		private IGraphicsDeviceService _graphicsDeviceManager;
-		private SpriteBatch _spriteBatch;
-
-		private KeyboardState _keyboard;
-		private MouseState _mouse;
 		private int posX = 100, posY = 100;
-		private float _rotation;
+		private ContentManager _content;
+		private bool _focused;
+		private IGraphicsDeviceService _graphicsDeviceManager;
+		private WpfKeyboard _keyboard;
+		private KeyboardState _keyboardState;
+		private WpfMouse _mouse;
 		private bool _mouseDown;
+		private MouseState _mouseState;
+		private float _rotation;
+		private SpriteBatch _spriteBatch;
+		private Texture2D _texture;
+
+		#endregion
+
+		#region Methods
 
 		public override void Initialize()
 		{
@@ -32,7 +40,8 @@ namespace WpfTest
 
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 
-			_keyboard = Keyboard.GetState();
+			_keyboard = new WpfKeyboard(this);
+			_mouse = new WpfMouse(this);
 		}
 
 		public override void Render(GameTime time)
@@ -63,18 +72,29 @@ namespace WpfTest
 
 		private void Update(GameTime time)
 		{
-			_keyboard = Keyboard.GetState();
-			_mouse = Mouse.GetState();
+			_mouseState = _mouse.GetState();
+			if (!_focused && IsMouseDirectlyOver && _mouseState.LeftButton == ButtonState.Pressed)
+			{
+				Focus();
+				_focused = true;
+			}
+			else
+			{
+				_focused = false;
+			}
+			_keyboardState = _keyboard.GetState();
 
-			if (_keyboard.IsKeyDown(Keys.Right))
+			if (_keyboardState.IsKeyDown(Keys.Right))
 			{
 				_rotation += 0.05f;
 			}
-			if (_keyboard.IsKeyDown(Keys.Left))
+			if (_keyboardState.IsKeyDown(Keys.Left))
 			{
 				_rotation -= 0.05f;
 			}
-			_mouseDown = _mouse.LeftButton == ButtonState.Pressed;
+			_mouseDown = _mouseState.LeftButton == ButtonState.Pressed;
 		}
+
+		#endregion
 	}
 }
