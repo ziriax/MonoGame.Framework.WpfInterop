@@ -2,43 +2,43 @@
 
 This adds Wpf support to MonoGame.
 
-You can host as many MonoGame controls in Wpf as you want by using D3D11Host.
+You can host as many MonoGame controls in Wpf as you want.
 
-Create a new class and derive it from D3D11Host.
+# Important changes
 
-Override the Initialize and Render methods and implement your own game routines.
+1. Derive from MonoGame.Framework.WpfInterop.WpfGame instead of Microsoft.Xna.Framework.Game
+2. Keyboard and Mouse events from MonoGame classes will not work with this implementation. Use WpfKeyboard and WpfMouse instead. Read this issue for details: https://github.com/MarcStan/MonoGame.Framework.WpfInterop/issues/1
+3. GraphicsDeviceManager can no longer be used (it requires a reference to Game). Use WpfGraphicsDeviceService instead (it requires a reference to WpfGame/D3D11Host).
 
 ## Example
 
-public class ContentScene : D3D11Host
+public class ContentScene : WpfGame
 {
-	private ContentManager _content;
-
-	private Texture2D _texture;
 	private IGraphicsDeviceService _graphicsDeviceManager;
-	private SpriteBatch _spriteBatch;
+	private WpfKeyboard _keyboard;
+	private WpfMouse _mouse;
 
-	public override void Initialize()
+	protected override void Initialize()
 	{
+		base.Initialize();
+
+		// must be initialized. required by Content loading and rendering (will add itself to the Services)
 		_graphicsDeviceManager = new WpfGraphicsDeviceService(this);
 
-		_content = new ContentManager(Services)
-		{
-			RootDirectory = "Content"
-		};
-		_texture = _content.Load<Texture2D>("textures/sample");
-
-		_spriteBatch = new SpriteBatch(GraphicsDevice);
+		// wpf and keyboard need reference to the host control in order to receive input
+		// this means every WpfGame control will have it's own keyboard & mouse manager which will only react if the mouse is in the control
+		_keyboard = new WpfKeyboard(this);
+		_mouse = new WpfMouse(this);
 	}
 
-	public override void Render(GameTime time)
+	protected override void Update(GameTime time)
 	{
-		GraphicsDevice.Clear(Color.Black);
+		// every update we can now query the keyboard & mouse for our WpfGame
+		var mouseState = _mouse.GetState();
+		var keyboardState = _keyboard.GetState();
+	}
 
-		_spriteBatch.Begin();
-		_spriteBatch.Draw(_texture, new Vector2(100, 100), Color.White);
-		_spriteBatch.End();
-
-		base.Render(time);
+	protected override void Draw(GameTime time)
+	{
 	}
 }

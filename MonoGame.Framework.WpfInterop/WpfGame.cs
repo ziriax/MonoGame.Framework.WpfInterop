@@ -16,7 +16,7 @@ namespace MonoGame.Framework.WpfInterop
 
 		public WpfGame()
 		{
-			Content = new ContentManager(Services);
+			Content = new ContentManager(Services, "Content");
 		}
 
 		#endregion
@@ -61,7 +61,7 @@ namespace MonoGame.Framework.WpfInterop
 		{
 		}
 
-		protected override sealed void Render(GameTime time)
+		protected sealed override void Render(GameTime time)
 		{
 			base.Render(time);
 

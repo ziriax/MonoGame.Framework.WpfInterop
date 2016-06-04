@@ -53,7 +53,6 @@ namespace WpfTest
 			base.Initialize();
 			_graphicsDeviceManager = new WpfGraphicsDeviceService(this);
 
-			Content.RootDirectory = "Content";
 			_texture = Content.Load<Texture2D>("hello");
 
 			_spriteBatch = new SpriteBatch(GraphicsDevice);

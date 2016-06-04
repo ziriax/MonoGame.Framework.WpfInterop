@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows;
+using Keyboard = System.Windows.Input.Keyboard;
 
 namespace MonoGame.Framework.WpfInterop.Input
 {
@@ -38,20 +39,17 @@ namespace MonoGame.Framework.WpfInterop.Input
 		#region Methods
 
 		/// <summary>
-		/// Gets the active keyboardstate for the specific WPF control.
-		/// </summary>
-		/// <returns></returns>
-		public static KeyboardState GetState(IInputElement focusElement)
-		{
-			return new KeyboardState(GetKeys(focusElement));
-		}
-
-		/// <summary>
 		/// Gets the active keyboardstate.
 		/// </summary>
 		/// <returns></returns>
 		public KeyboardState GetState()
 		{
+			if (_focusElement.IsMouseDirectlyOver && Keyboard.FocusedElement != _focusElement)
+			{
+				// we assume the user wants keyboard input into the control when his mouse is over it
+				// in order for the events to register we must focus it
+				_focusElement.Focus();
+			}
 			return new KeyboardState(GetKeys(_focusElement));
 		}
 
