@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Framework.WpfInterop;
@@ -7,12 +6,11 @@ using MonoGame.Framework.WpfInterop.Input;
 
 namespace WpfTest
 {
-	public class ContentScene : D3D11Host
+	public class ContentScene : WpfGame
 	{
 		#region Fields
 
 		private int posX = 100, posY = 100;
-		private ContentManager _content;
 		private bool _focused;
 		private IGraphicsDeviceService _graphicsDeviceManager;
 		private WpfKeyboard _keyboard;
@@ -28,15 +26,13 @@ namespace WpfTest
 
 		#region Methods
 
-		public override void Initialize()
+		protected override void Initialize()
 		{
+			base.Initialize();
 			_graphicsDeviceManager = new WpfGraphicsDeviceService(this);
 
-			_content = new ContentManager(Services)
-			{
-				RootDirectory = "Content"
-			};
-			_texture = _content.Load<Texture2D>("hello");
+			Content.RootDirectory = "Content";
+			_texture = Content.Load<Texture2D>("hello");
 
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -44,10 +40,8 @@ namespace WpfTest
 			_mouse = new WpfMouse(this);
 		}
 
-		public override void Render(GameTime time)
+		protected override void Draw(GameTime time)
 		{
-			Update(time);
-
 			GraphicsDevice.Clear(_mouseDown ? Color.CornflowerBlue : Color.Black);
 
 			// since we share the GraphicsDevice with all hosts, we need to save and reset the states
@@ -66,11 +60,9 @@ namespace WpfTest
 			GraphicsDevice.DepthStencilState = depth;
 			GraphicsDevice.RasterizerState = raster;
 			GraphicsDevice.SamplerStates[0] = sampler;
-
-			base.Render(time);
 		}
 
-		private void Update(GameTime time)
+		protected override void Update(GameTime time)
 		{
 			_mouseState = _mouse.GetState();
 			if (!_focused && IsMouseDirectlyOver && _mouseState.LeftButton == ButtonState.Pressed)

@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.ComponentModel.Design;
-using Microsoft.Xna.Framework.Content;
 
 namespace MonoGame.Framework.WpfInterop
 {
@@ -10,19 +10,7 @@ namespace MonoGame.Framework.WpfInterop
 	/// </summary>
 	public class WpfGraphicsDeviceService : IGraphicsDeviceService
 	{
-		public GraphicsDevice GraphicsDevice { get; }
-
-		[Obsolete("Dummy implementation will never call DeviceCreated")]
-		public event EventHandler<EventArgs> DeviceCreated;
-
-		[Obsolete("Dummy implementation will never call DeviceDisposing")]
-		public event EventHandler<EventArgs> DeviceDisposing;
-
-		[Obsolete("Dummy implementation will never call DeviceReset")]
-		public event EventHandler<EventArgs> DeviceReset;
-
-		[Obsolete("Dummy implementation will never call DeviceResetting")]
-		public event EventHandler<EventArgs> DeviceResetting;
+		#region Constructors
 
 		/// <summary>
 		/// Create a new instance of the dummy. The constructor will autom. add the instance itself to the <see cref="D3D11Host.Services"/> container of <see cref="host"/>.
@@ -39,5 +27,29 @@ namespace MonoGame.Framework.WpfInterop
 			GraphicsDevice = host.GraphicsDevice;
 			host.Services.AddService(typeof(IGraphicsDeviceService), this);
 		}
+
+		#endregion
+
+		#region Events
+
+		[Obsolete("Dummy implementation will never call DeviceCreated")]
+		public event EventHandler<EventArgs> DeviceCreated;
+
+		[Obsolete("Dummy implementation will never call DeviceDisposing")]
+		public event EventHandler<EventArgs> DeviceDisposing;
+
+		[Obsolete("Dummy implementation will never call DeviceReset")]
+		public event EventHandler<EventArgs> DeviceReset;
+
+		[Obsolete("Dummy implementation will never call DeviceResetting")]
+		public event EventHandler<EventArgs> DeviceResetting;
+
+		#endregion
+
+		#region Properties
+
+		public GraphicsDevice GraphicsDevice { get; }
+
+		#endregion
 	}
 }

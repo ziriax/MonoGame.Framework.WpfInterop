@@ -8,16 +8,34 @@ namespace WpfTest
 	/// Source: http://msdn.microsoft.com/en-us/library/bb203926(v=xnagamestudio.40).aspx
 	/// Note that this is just an example implementation of <see cref="D3D11Host"/>. Create your own renderer by deriving a new class from <see cref="D3D11Host"/> and overriding its <see cref="D3D11Host.Render"/> method.
 	/// </summary>
-	public class DemoScene : D3D11Host
+	public class DemoScene : WpfGame
 	{
-		private Matrix _worldMatrix;
-		private Matrix _viewMatrix;
-		private Matrix _projectionMatrix;
-		private VertexDeclaration _vertexDeclaration;
-		private VertexBuffer _vertexBuffer;
-		private BasicEffect _basicEffect;
+		#region Fields
 
-		public override void Initialize()
+		private BasicEffect _basicEffect;
+		private Matrix _projectionMatrix;
+		private VertexBuffer _vertexBuffer;
+		private VertexDeclaration _vertexDeclaration;
+		private Matrix _viewMatrix;
+		private Matrix _worldMatrix;
+
+		#endregion
+
+		#region Methods
+
+		protected override void Dispose(bool disposing)
+		{
+			_vertexBuffer.Dispose();
+			_vertexBuffer = null;
+
+			_vertexDeclaration.Dispose();
+			_vertexDeclaration = null;
+
+			_basicEffect.Dispose();
+			_basicEffect = null;
+		}
+
+		protected override void Initialize()
 		{
 			float tilt = MathHelper.ToRadians(0);  // 0 degree angle
 												   // Use the world matrix to tilt the cube along x and y axes.
@@ -129,7 +147,7 @@ namespace WpfTest
 			cubeVertices[16] = new VertexPositionNormalTexture(topRightFront, topNormal, textureBottomRight);
 			cubeVertices[17] = new VertexPositionNormalTexture(topRightBack, topNormal, textureTopRight);
 
-			// Bottom face. 
+			// Bottom face.
 			cubeVertices[18] = new VertexPositionNormalTexture(bottomLeftFront, bottomNormal, textureTopLeft);
 			cubeVertices[19] = new VertexPositionNormalTexture(bottomLeftBack, bottomNormal, textureBottomLeft);
 			cubeVertices[20] = new VertexPositionNormalTexture(bottomRightBack, bottomNormal, textureBottomRight);
@@ -145,7 +163,7 @@ namespace WpfTest
 			cubeVertices[28] = new VertexPositionNormalTexture(bottomLeftBack, leftNormal, textureBottomLeft);
 			cubeVertices[29] = new VertexPositionNormalTexture(topLeftFront, leftNormal, textureTopRight);
 
-			// Right face. 
+			// Right face.
 			cubeVertices[30] = new VertexPositionNormalTexture(topRightFront, rightNormal, textureTopLeft);
 			cubeVertices[31] = new VertexPositionNormalTexture(bottomRightFront, rightNormal, textureBottomLeft);
 			cubeVertices[32] = new VertexPositionNormalTexture(bottomRightBack, rightNormal, textureBottomRight);
@@ -157,21 +175,7 @@ namespace WpfTest
 			_vertexBuffer.SetData(cubeVertices);
 		}
 
-
-		public override void Dispose()
-		{
-			_vertexBuffer.Dispose();
-			_vertexBuffer = null;
-
-			_vertexDeclaration.Dispose();
-			_vertexDeclaration = null;
-
-			_basicEffect.Dispose();
-			_basicEffect = null;
-		}
-
-
-		public override void Render(GameTime time)
+		protected override void Draw(GameTime time)
 		{
 			GraphicsDevice.Clear(Color.SteelBlue);
 			GraphicsDevice.RasterizerState = RasterizerState.CullNone;
@@ -186,5 +190,7 @@ namespace WpfTest
 				GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 12);
 			}
 		}
+
+		#endregion
 	}
 }

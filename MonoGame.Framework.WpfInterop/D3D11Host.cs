@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.Design;
@@ -6,7 +7,6 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Microsoft.Xna.Framework;
 
 namespace MonoGame.Framework.WpfInterop
 {
@@ -17,28 +17,51 @@ namespace MonoGame.Framework.WpfInterop
 	{
 		#region Fields
 
-		// The Direct3D 11 device (shared by all D3D11Host elements):
-		private static GraphicsDevice _graphicsDevice;
-		private static int _referenceCount;
 		private static readonly object _graphicsDeviceLock = new object();
-
-		// Image source:
-		private RenderTarget2D _renderTarget;
-		private D3D11Image _d3D11Image;
-		private bool _resetBackBuffer;
 
 		// Render timing:
 		private readonly Stopwatch _timer;
-		private TimeSpan _lastRenderingTime;
-		private TimeSpan _timeSinceStart = TimeSpan.Zero;
 
+		// The Direct3D 11 device (shared by all D3D11Host elements):
+		private static GraphicsDevice _graphicsDevice;
+		private static bool? _isInDesignMode;
+		private static int _referenceCount;
+
+		private D3D11Image _d3D11Image;
+		private TimeSpan _lastRenderingTime;
 		private bool _loaded;
+
+		// Image source:
+		private RenderTarget2D _renderTarget;
+		private bool _resetBackBuffer;
+		private TimeSpan _timeSinceStart = TimeSpan.Zero;
+		private bool _disposed;
+
+		#endregion
+
+		#region Constructors
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="D3D11Host"/> class.
+		/// </summary>
+		public D3D11Host()
+		{
+			// defaulting to fill as that's what's needed in most cases
+			Stretch = Stretch.Fill;
+
+			_timer = new Stopwatch();
+			Loaded += OnLoaded;
+			Unloaded += OnUnloaded;
+		}
+
+		~D3D11Host()
+		{
+			Dispose(false);
+		}
 
 		#endregion
 
 		#region Properties
-
-		public IServiceContainer Services { get; } = new ServiceContainer();
 
 		/// <summary>
 		/// Gets a value indicating whether the controls runs in the context of a designer (e.g.
@@ -58,7 +81,6 @@ namespace MonoGame.Framework.WpfInterop
 				return _isInDesignMode.Value;
 			}
 		}
-		private static bool? _isInDesignMode;
 
 		/// <summary>
 		/// Gets the graphics device.
@@ -69,51 +91,42 @@ namespace MonoGame.Framework.WpfInterop
 			get { return _graphicsDevice; }
 		}
 
-		#endregion
-
-		#region Constructors
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="D3D11Host"/> class.
-		/// </summary>
-		public D3D11Host()
-		{
-			// defaulting to fill as that's what's needed in most cases
-			Stretch = Stretch.Fill;
-
-			_timer = new Stopwatch();
-			Loaded += OnLoaded;
-			Unloaded += OnUnloaded;
-		}
+		public IServiceContainer Services { get; } = new ServiceContainer();
 
 		#endregion
 
 		#region Methods
 
-		private void OnLoaded(object sender, RoutedEventArgs eventArgs)
+		protected virtual void Dispose(bool disposing)
 		{
-			if (IsInDesignMode || _loaded)
+			if (_disposed)
 				return;
-
-			_loaded = true;
-			InitializeGraphicsDevice();
-			InitializeImageSource();
-			Initialize();
-			StartRendering();
+			_disposed = true;
 		}
 
-
-		private void OnUnloaded(object sender, RoutedEventArgs eventArgs)
+		public void Dispose()
 		{
-			if (IsInDesignMode)
-				return;
-
-			StopRendering();
-			Dispose();
-			UnitializeImageSource();
-			UninitializeGraphicsDevice();
+			Dispose(true);
 		}
 
+		protected virtual void Initialize()
+		{
+		}
+
+		protected virtual void Render(GameTime time)
+		{
+		}
+
+		/// <summary>
+		/// Raises the <see cref="FrameworkElement.SizeChanged" /> event, using the specified 
+		/// information as part of the eventual event data.
+		/// </summary>
+		/// <param name="sizeInfo">Details of the old and new size involved in the change.</param>
+		protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+		{
+			_resetBackBuffer = true;
+			base.OnRenderSizeChanged(sizeInfo);
+		}
 
 		private static void InitializeGraphicsDevice()
 		{
@@ -133,7 +146,6 @@ namespace MonoGame.Framework.WpfInterop
 			}
 		}
 
-
 		private static void UninitializeGraphicsDevice()
 		{
 			lock (_graphicsDeviceLock)
@@ -146,34 +158,6 @@ namespace MonoGame.Framework.WpfInterop
 				}
 			}
 		}
-
-
-		private void InitializeImageSource()
-		{
-			_d3D11Image = new D3D11Image();
-			_d3D11Image.IsFrontBufferAvailableChanged += OnIsFrontBufferAvailableChanged;
-			CreateBackBuffer();
-			Source = _d3D11Image;
-		}
-
-
-		private void UnitializeImageSource()
-		{
-			_d3D11Image.IsFrontBufferAvailableChanged -= OnIsFrontBufferAvailableChanged;
-			Source = null;
-
-			if (_d3D11Image != null)
-			{
-				_d3D11Image.Dispose();
-				_d3D11Image = null;
-			}
-			if (_renderTarget != null)
-			{
-				_renderTarget.Dispose();
-				_renderTarget = null;
-			}
-		}
-
 
 		private void CreateBackBuffer()
 		{
@@ -190,26 +174,38 @@ namespace MonoGame.Framework.WpfInterop
 			_d3D11Image.SetBackBuffer(_renderTarget);
 		}
 
-
-		private void StartRendering()
+		private void InitializeImageSource()
 		{
-			if (_timer.IsRunning)
-				return;
-
-			CompositionTarget.Rendering += OnRendering;
-			_timer.Start();
+			_d3D11Image = new D3D11Image();
+			_d3D11Image.IsFrontBufferAvailableChanged += OnIsFrontBufferAvailableChanged;
+			CreateBackBuffer();
+			Source = _d3D11Image;
 		}
 
-
-		private void StopRendering()
+		private void OnIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs eventArgs)
 		{
-			if (!_timer.IsRunning)
-				return;
-
-			CompositionTarget.Rendering -= OnRendering;
-			_timer.Stop();
+			if (_d3D11Image.IsFrontBufferAvailable)
+			{
+				StartRendering();
+				_resetBackBuffer = true;
+			}
+			else
+			{
+				StopRendering();
+			}
 		}
 
+		private void OnLoaded(object sender, RoutedEventArgs eventArgs)
+		{
+			if (IsInDesignMode || _loaded)
+				return;
+
+			_loaded = true;
+			InitializeGraphicsDevice();
+			InitializeImageSource();
+			Initialize();
+			StartRendering();
+		}
 
 		private void OnRendering(object sender, EventArgs eventArgs)
 		{
@@ -240,45 +236,50 @@ namespace MonoGame.Framework.WpfInterop
 			_resetBackBuffer = false;
 		}
 
-
-		/// <summary>
-		/// Raises the <see cref="FrameworkElement.SizeChanged" /> event, using the specified 
-		/// information as part of the eventual event data.
-		/// </summary>
-		/// <param name="sizeInfo">Details of the old and new size involved in the change.</param>
-		protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+		private void OnUnloaded(object sender, RoutedEventArgs eventArgs)
 		{
-			_resetBackBuffer = true;
-			base.OnRenderSizeChanged(sizeInfo);
+			if (IsInDesignMode)
+				return;
+
+			StopRendering();
+			Dispose();
+			UnitializeImageSource();
+			UninitializeGraphicsDevice();
 		}
 
-
-		private void OnIsFrontBufferAvailableChanged(object sender, DependencyPropertyChangedEventArgs eventArgs)
+		private void StartRendering()
 		{
-			if (_d3D11Image.IsFrontBufferAvailable)
+			if (_timer.IsRunning)
+				return;
+
+			CompositionTarget.Rendering += OnRendering;
+			_timer.Start();
+		}
+
+		private void StopRendering()
+		{
+			if (!_timer.IsRunning)
+				return;
+
+			CompositionTarget.Rendering -= OnRendering;
+			_timer.Stop();
+		}
+
+		private void UnitializeImageSource()
+		{
+			_d3D11Image.IsFrontBufferAvailableChanged -= OnIsFrontBufferAvailableChanged;
+			Source = null;
+
+			if (_d3D11Image != null)
 			{
-				StartRendering();
-				_resetBackBuffer = true;
+				_d3D11Image.Dispose();
+				_d3D11Image = null;
 			}
-			else
+			if (_renderTarget != null)
 			{
-				StopRendering();
+				_renderTarget.Dispose();
+				_renderTarget = null;
 			}
-		}
-
-		public virtual void Render(GameTime time)
-		{
-
-		}
-
-		public virtual void Initialize()
-		{
-
-		}
-
-		public virtual void Dispose()
-		{
-
 		}
 
 		#endregion
