@@ -17,6 +17,7 @@ namespace MonoGame.Framework.WpfInterop
 		public WpfGame()
 		{
 			Content = new ContentManager(Services, "Content");
+			Focusable = true;
 		}
 
 		#endregion
