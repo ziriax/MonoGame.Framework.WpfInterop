@@ -42,10 +42,10 @@ namespace MonoGame.Framework.WpfInterop
 
 		protected override void Dispose(bool disposing)
 		{
+			base.Dispose(disposing);
 			Content?.Dispose();
 
 			UnloadContent();
-			base.Dispose();
 		}
 
 		protected virtual void Draw(GameTime gameTime)
