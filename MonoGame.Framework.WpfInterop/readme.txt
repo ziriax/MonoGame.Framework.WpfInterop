@@ -2,7 +2,7 @@
 
 This adds Wpf support to MonoGame.
 
-You can host as many MonoGame controls in Wpf as you want.
+You can host as many MonoGame controls in Wpf as you want. Note that WPF is limited to 60 FPS.
 
 # Important changes
 

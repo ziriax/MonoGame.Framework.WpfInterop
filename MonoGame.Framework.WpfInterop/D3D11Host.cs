@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.ComponentModel;
-using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -91,7 +90,10 @@ namespace MonoGame.Framework.WpfInterop
 			get { return _graphicsDevice; }
 		}
 
-		public IServiceContainer Services { get; } = new ServiceContainer();
+		/// <summary>
+		/// Default services collection.
+		/// </summary>
+		public GameServiceContainer Services { get; } = new GameServiceContainer();
 
 		#endregion
 

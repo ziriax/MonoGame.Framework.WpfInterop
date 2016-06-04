@@ -15,25 +15,19 @@ namespace WpfTest
 		#region Fields
 
 		private BasicEffect _basicEffect;
+		private WpfKeyboard _keyboard;
+		private KeyboardState _keyboardState;
+		private WpfMouse _mouse;
+		private MouseState _mouseState;
 		private Matrix _projectionMatrix;
 		private VertexBuffer _vertexBuffer;
 		private VertexDeclaration _vertexDeclaration;
 		private Matrix _viewMatrix;
 		private Matrix _worldMatrix;
-		private WpfKeyboard _keyboard;
-		private KeyboardState _keyboardState;
-		private WpfMouse _mouse;
-		private MouseState _mouseState;
 
 		#endregion
 
 		#region Methods
-
-		protected override void Update(GameTime gameTime)
-		{
-			_mouseState = _mouse.GetState();
-			_keyboardState = _keyboard.GetState();
-		}
 
 		protected override void Dispose(bool disposing)
 		{
@@ -206,6 +200,12 @@ namespace WpfTest
 
 			_keyboard = new WpfKeyboard(this);
 			_mouse = new WpfMouse(this);
+		}
+
+		protected override void Update(GameTime gameTime)
+		{
+			_mouseState = _mouse.GetState();
+			_keyboardState = _keyboard.GetState();
 		}
 
 		#endregion
