@@ -110,13 +110,17 @@ namespace MonoGame.Framework.WpfInterop.Input
 			// capture the mouse, this allows receiving of mouse event while the mouse is leaving the control: https://msdn.microsoft.com/en-us/library/ms591452(v=vs.110).aspx
 			if (!_focusElement.IsMouseCaptured)
 			{
-
 				// however, only focus if we are the active window, otherwise the window will become active and pop into foreground just by hovering the mouse over the game panel
 				if (WindowHelper.IsControlOnActiveWindow(_focusElement))
 				{
 					// however, only focus if we are the active window, otherwise the window will become active while remaining in the background
 					//
 					_focusElement.CaptureMouse();
+				}
+				else
+				{
+					// don't update mouse events if we are just hovering over different window
+					return;
 				}
 			}
 			e.Handled = true;
