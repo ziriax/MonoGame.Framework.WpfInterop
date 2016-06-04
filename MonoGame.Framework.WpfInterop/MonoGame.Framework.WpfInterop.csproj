@@ -53,7 +53,6 @@
     <Compile Include="D3D11Host.cs" />
     <Compile Include="D3D11Image.cs" />
     <Compile Include="D3D9.cs" />
-    <Compile Include="DemoScene.cs" />
     <Compile Include="Input\WpfKeyboard.cs" />
     <Compile Include="Input\WpfMouse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

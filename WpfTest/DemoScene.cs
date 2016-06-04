@@ -1,8 +1,8 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Framework.WpfInterop;
 
-namespace MonoGame.Framework.WpfInterop
+namespace WpfTest
 {
 	/// <summary>
 	/// Source: http://msdn.microsoft.com/en-us/library/bb203926(v=xnagamestudio.40).aspx
