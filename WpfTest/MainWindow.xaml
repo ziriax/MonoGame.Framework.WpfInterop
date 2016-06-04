@@ -3,7 +3,6 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:wpfInterop="clr-namespace:MonoGame.Framework.WpfInterop;assembly=MonoGame.Framework.WpfInterop"
 		xmlns:wpfTest="clr-namespace:WpfTest"
 		mc:Ignorable="d"
 		Title="MainWindow" Height="768" Width="1024" MinWidth="800" MinHeight="520">
@@ -16,14 +15,14 @@
 			<ColumnDefinition Width="*" />
 			<ColumnDefinition Width="*" />
 		</Grid.ColumnDefinitions>
-		<wpfInterop:D3D11Host Grid.Row="0" Grid.Column="0" Width="400" Height="240" />
 		<wpfTest:DemoScene Grid.Row="0" Grid.Column="1" Width="400" Height="240" />
-		<wpfTest:ContentScene Grid.Row="1" Grid.Column="0" Width="400" Height="240" Focusable="True" />
+		<wpfTest:ContentScene Grid.Row="1" Grid.Column="0" Width="400" Height="240" />
 		<wpfTest:DemoScene Grid.Row="1" Grid.Column="1" />
-		<TextBlock Grid.Row="0" Grid.Column="0" Text="D3D11Host raw:" HorizontalAlignment="Center" Foreground="Green" />
-		<TextBlock Grid.Row="0" Grid.Column="1" Text="DemoScene:" HorizontalAlignment="Center" />
-		<TextBlock Grid.Row="1" Grid.Column="0" Text="ContentScene:" HorizontalAlignment="Center" Foreground="Green" />
+		<TextBlock Grid.Row="0" Grid.Column="0" Text="Left click in any control to change background color. Use Left right to rotate the 'Hello texture' sprite. Use space to pause the 3D cubes. Note that input is only registered in the control where the mouse is over."
+					HorizontalAlignment="Center" TextWrapping="Wrap" Margin="5" />
+		<TextBlock Grid.Row="0" Grid.Column="1" Text="DemoScene:" HorizontalAlignment="Center" IsHitTestVisible="False" />
+		<TextBlock Grid.Row="1" Grid.Column="0" Text="ContentScene:" HorizontalAlignment="Center" Foreground="Green" IsHitTestVisible="False" />
 		<TextBox  Grid.Row="1" Grid.Column="0" Margin="0,20,0,0" Width="100" Height="23" HorizontalAlignment="Center" VerticalAlignment="Top" />
-		<TextBlock Grid.Row="1" Grid.Column="1" Text="DemoScene (scaled):" HorizontalAlignment="Center" />
+		<TextBlock Grid.Row="1" Grid.Column="1" Text="DemoScene (scaled):" HorizontalAlignment="Center" IsHitTestVisible="False" />
 	</Grid>
 </Window>
