@@ -2,6 +2,7 @@
 using System;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace MonoGame.Framework.WpfInterop.Input
 {
@@ -50,12 +51,69 @@ namespace MonoGame.Framework.WpfInterop.Input
 
 		private void HandleMouse(object sender, MouseEventArgs e)
 		{
-			if (e.Handled || !_focusElement.IsMouseDirectlyOver)
+			if (e.Handled)
 				return;
 
+			var pos = e.GetPosition(_focusElement);
+			if (!_focusElement.IsMouseDirectlyOver || _focusElement.IsMouseCaptured)
+			{
+				// IsMouseDirectlyOver always returns true if the mouse is captured, so we need to do our own hit testing if the Mouse is captured to find out whether it is actually over the control or not
+				if (_focusElement.IsMouseCaptured)
+				{
+					// apparently all WPF IInputElements are always Visuals, so we can cast directly
+					var v = (Visual)_focusElement;
+					bool hit = false;
+					VisualTreeHelper.HitTest(v, filterTarget => HitTestFilterBehavior.Continue, target =>
+					{
+						if (target.VisualHit == _focusElement)
+						{
+							// our actual element was hit
+							hit = true;
+						}
+						return HitTestResultBehavior.Continue;
+					}, new PointHitTestParameters(pos));
+
+					if (hit)
+					{
+						// TODO: technically this doesn't account for any elements that are overlayed onto our control (e.g. textbox overlayed onto our control will never be able to receive focus this way)
+						// that is what IsMouseDirectlyOver is supposed to check, but it doesn't work correctly when mouse is captured..
+						// its possible that the mouse is over a control that is layed ontop of ours, thus we should consider our control to be not hit, but I have no idea how to check for that
+					}
+					else
+					{
+						// outside the hitbox
+
+						// when the mouse is leaving the control we need to register button releases
+						// when the user clicks in the control, holds the button and moves it outside the control and releases there it normally does not registered
+						// the control would thus think that the button is still pressed
+						// using capture allows us to receive this event, propagate it and then free the mouse
+
+						_mouseState = new MouseState(_mouseState.X, _mouseState.Y, _mouseState.ScrollWheelValue, (ButtonState)e.LeftButton, (ButtonState)e.MiddleButton, (ButtonState)e.RightButton, (ButtonState)e.XButton1, (ButtonState)e.XButton2);
+						// only release if LeftMouse is up
+						if (e.LeftButton == MouseButtonState.Released)
+						{
+							System.Windows.Input.Mouse.Capture(null);
+							//_focusElement.ReleaseMouseCapture();
+						}
+						e.Handled = true;
+						return;
+					}
+					// inside the control and captured -> still requires full update, so run code below and don't return right away
+				}
+				else
+				{
+					// mouse is outside the control and not captured, so don't update the mouse state
+					return;
+				}
+			}
+
+			// capture the mouse, this allows receiving of mouse event while the mouse is leaving the control: https://msdn.microsoft.com/en-us/library/ms591452(v=vs.110).aspx
+			if (!_focusElement.IsMouseCaptured)
+			{
+				_focusElement.CaptureMouse();
+			}
 			e.Handled = true;
 			var m = _mouseState;
-			var pos = e.GetPosition(_focusElement);
 			var w = e as MouseWheelEventArgs;
 			_mouseState = new MouseState((int)pos.X, (int)pos.Y, m.ScrollWheelValue + w?.Delta ?? 0, (ButtonState)e.LeftButton, (ButtonState)e.MiddleButton, (ButtonState)e.RightButton, (ButtonState)e.XButton1, (ButtonState)e.XButton2);
 		}
