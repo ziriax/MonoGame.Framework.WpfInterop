@@ -53,3 +53,16 @@ public class ContentScene : D3D11Host
 }
 
 ```
+
+# Roadmap
+
+* Add support for input
+* Create a class as similar to Game as possible to derive from (instead of D3D11Host which lacks many features)
+* Implement GraphicsDeviceService (call all events when appropriate)
+
+# Changelog
+
+**v1.0.0**
+
+* Initial release, can render and load content
+* Input is not working yet
