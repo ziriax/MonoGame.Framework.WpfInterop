@@ -25,7 +25,7 @@ namespace MonoGame.Framework.WpfInterop.Input
 		/// <summary>
 		/// Creates a new instance of the keyboard helper.
 		/// </summary>
-		/// <param name="focusElement">The element that will be used as the focus point. Only if this element is correctly focused, key events will be registered. It may be required to call <see cref="System.Windows.Input.Keyboard.Focus"/> on this element.</param>
+		/// <param name="focusElement">The element that will be used as the focus point. Provide your implementation of <see cref="WpfGame"/> here.</param>
 		public WpfKeyboard(IInputElement focusElement)
 		{
 			if (focusElement == null)

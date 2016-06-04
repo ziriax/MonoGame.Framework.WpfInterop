@@ -12,7 +12,7 @@ You can host as many MonoGame controls in Wpf as you want.
 
 ## Example
 
-public class ContentScene : WpfGame
+public class MyGame : WpfGame
 {
 	private IGraphicsDeviceService _graphicsDeviceManager;
 	private WpfKeyboard _keyboard;
@@ -42,3 +42,8 @@ public class ContentScene : WpfGame
 	{
 	}
 }
+
+
+Now you can use this class in any of your WPF application:
+
+<MyGame Width="800" Height="480" />

@@ -8,6 +8,7 @@ namespace MonoGame.Framework.WpfInterop.Input
 {
 	/// <summary>
 	/// Helper class that converts WPF mouse input to the XNA/MonoGame <see cref="_mouseState"/>.
+	/// Required for any WPF hosted control.
 	/// </summary>
 	public class WpfMouse
 	{
@@ -24,7 +25,7 @@ namespace MonoGame.Framework.WpfInterop.Input
 		/// <summary>
 		/// Creates a new instance of the keyboard helper.
 		/// </summary>
-		/// <param name="focusElement">The element that will be used as the focus point. Only if this element is correctly focused, mouse events will be handled.</param>
+		/// <param name="focusElement">The element that will be used as the focus point. Provide your implementation of <see cref="WpfGame"/> here.</param>
 		public WpfMouse(IInputElement focusElement)
 		{
 			if (focusElement == null)

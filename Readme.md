@@ -19,48 +19,56 @@ By adding the NuGet package to a project it is possible to host MonoGame inside 
 
 ```csharp
 
-public class ContentScene : D3D11Host
+public class MyGame : WpfGame
 {
-	private ContentManager _content;
-
-	private Texture2D _texture;
 	private IGraphicsDeviceService _graphicsDeviceManager;
-	private SpriteBatch _spriteBatch;
+	private WpfKeyboard _keyboard;
+	private WpfMouse _mouse;
 
-	public override void Initialize()
+	protected override void Initialize()
 	{
+		base.Initialize();
+
+		// must be initialized. required by Content loading and rendering (will add itself to the Services)
 		_graphicsDeviceManager = new WpfGraphicsDeviceService(this);
 
-		_content = new ContentManager(Services)
-		{
-			RootDirectory = "Content"
-		};
-		_texture = _content.Load<Texture2D>("textures/sample");
-
-		_spriteBatch = new SpriteBatch(GraphicsDevice);
+		// wpf and keyboard need reference to the host control in order to receive input
+		// this means every WpfGame control will have it's own keyboard & mouse manager which will only react if the mouse is in the control
+		_keyboard = new WpfKeyboard(this);
+		_mouse = new WpfMouse(this);
 	}
 
-	public override void Render(GameTime time)
+	protected override void Update(GameTime time)
 	{
-		GraphicsDevice.Clear(Color.Black);
+		// every update we can now query the keyboard & mouse for our WpfGame
+		var mouseState = _mouse.GetState();
+		var keyboardState = _keyboard.GetState();
+	}
 
-		_spriteBatch.Begin();
-		_spriteBatch.Draw(_texture, new Vector2(100, 100), Color.White);
-		_spriteBatch.End();
-
-		base.Render(time);
+	protected override void Draw(GameTime time)
+	{
 	}
 }
 
 ```
 
+Now you can use it in any of your WPF forms:
+
+&lt;MyGame Width="800" Height="480" />
+
+
+
 # Roadmap
 
-* Add support for input
-* Create a class as similar to Game as possible to derive from (instead of D3D11Host which lacks many features)
 * Implement GraphicsDeviceService (call all events when appropriate)
+* Add support for the different modes (vsync, fixed timestep, ..)
 
 # Changelog
+
+**v1.1.0**
+
+* New class WpfGame that derives from D3D11Host. It provides a cleaner interface and is more similar to the original Game class
+* Input is nowavailable via WpfMouse and WpfKeyboard
 
 **v1.0.0**
 
