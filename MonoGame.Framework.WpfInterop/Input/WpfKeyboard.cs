@@ -1,10 +1,10 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Keyboard = System.Windows.Input.Keyboard;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows;
-using Keyboard = System.Windows.Input.Keyboard;
 
 namespace MonoGame.Framework.WpfInterop.Input
 {
@@ -48,7 +48,12 @@ namespace MonoGame.Framework.WpfInterop.Input
 			{
 				// we assume the user wants keyboard input into the control when his mouse is over it
 				// in order for the events to register we must focus it
-				_focusElement.Focus();
+
+				if (WindowHelper.IsControlOnActiveWindow(_focusElement))
+				{
+					// however, only focus if we are the active window, otherwise the window will become active and pop into foreground just by hovering the mouse over the game panel
+					_focusElement.Focus();
+				}
 			}
 			return new KeyboardState(GetKeys(_focusElement));
 		}

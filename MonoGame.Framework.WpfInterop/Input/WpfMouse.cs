@@ -93,8 +93,7 @@ namespace MonoGame.Framework.WpfInterop.Input
 						// only release if LeftMouse is up
 						if (e.LeftButton == MouseButtonState.Released)
 						{
-							System.Windows.Input.Mouse.Capture(null);
-							//_focusElement.ReleaseMouseCapture();
+							_focusElement.ReleaseMouseCapture();
 						}
 						e.Handled = true;
 						return;
@@ -111,7 +110,14 @@ namespace MonoGame.Framework.WpfInterop.Input
 			// capture the mouse, this allows receiving of mouse event while the mouse is leaving the control: https://msdn.microsoft.com/en-us/library/ms591452(v=vs.110).aspx
 			if (!_focusElement.IsMouseCaptured)
 			{
-				_focusElement.CaptureMouse();
+
+				// however, only focus if we are the active window, otherwise the window will become active and pop into foreground just by hovering the mouse over the game panel
+				if (WindowHelper.IsControlOnActiveWindow(_focusElement))
+				{
+					// however, only focus if we are the active window, otherwise the window will become active while remaining in the background
+					//
+					_focusElement.CaptureMouse();
+				}
 			}
 			e.Handled = true;
 			var m = _mouseState;

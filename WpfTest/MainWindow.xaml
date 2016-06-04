@@ -20,6 +20,7 @@
 		<wpfTest:DemoScene Grid.Row="1" Grid.Column="1" />
 		<TextBlock Grid.Row="0" Grid.Column="0" Text="Left click in any control to change background color. Use Left right to rotate the 'Hello texture' sprite. Use space to pause the 3D cubes. Note that input is only registered in the control where the mouse is over."
 					HorizontalAlignment="Center" TextWrapping="Wrap" Margin="5" />
+		<Button Grid.Row="0" Grid.Column="0" Width="140" Height="30" Content="Launch in new window" Click="Launch_OnClick" />
 		<TextBlock Grid.Row="0" Grid.Column="1" Text="DemoScene:" HorizontalAlignment="Center" IsHitTestVisible="False" />
 		<TextBlock Grid.Row="1" Grid.Column="0" Text="ContentScene:" HorizontalAlignment="Center" Foreground="Green" IsHitTestVisible="False" />
 		<TextBox  Grid.Row="1" Grid.Column="0" Margin="0,20,0,0" Width="100" Height="23" HorizontalAlignment="Center" VerticalAlignment="Top" />
