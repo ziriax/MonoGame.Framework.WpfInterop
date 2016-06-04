@@ -11,12 +11,10 @@ namespace WpfTest
 		#region Fields
 
 		private int posX = 100, posY = 100;
-		private bool _focused;
 		private IGraphicsDeviceService _graphicsDeviceManager;
 		private WpfKeyboard _keyboard;
 		private KeyboardState _keyboardState;
 		private WpfMouse _mouse;
-		private bool _mouseDown;
 		private MouseState _mouseState;
 		private float _rotation;
 		private SpriteBatch _spriteBatch;
@@ -28,7 +26,7 @@ namespace WpfTest
 
 		protected override void Draw(GameTime time)
 		{
-			GraphicsDevice.Clear(_mouseDown ? Color.CornflowerBlue : Color.Black);
+			GraphicsDevice.Clear(_mouseState.LeftButton == ButtonState.Pressed ? Color.Black : Color.CornflowerBlue);
 
 			// since we share the GraphicsDevice with all hosts, we need to save and reset the states
 			// this has to be done because spriteBatch internally sets states and doesn't reset themselves, fucking over any 3D rendering (which happens in the DemoScene)
@@ -64,26 +62,12 @@ namespace WpfTest
 		protected override void Update(GameTime time)
 		{
 			_mouseState = _mouse.GetState();
-			if (!_focused && IsMouseDirectlyOver && _mouseState.LeftButton == ButtonState.Pressed)
-			{
-				Focus();
-				_focused = true;
-			}
-			else
-			{
-				_focused = false;
-			}
 			_keyboardState = _keyboard.GetState();
 
-			if (_keyboardState.IsKeyDown(Keys.Right))
+			if (!_keyboardState.IsKeyDown(Keys.Space))
 			{
-				_rotation += 0.05f;
+				_rotation += (float)(2f * time.ElapsedGameTime.TotalSeconds);
 			}
-			if (_keyboardState.IsKeyDown(Keys.Left))
-			{
-				_rotation -= 0.05f;
-			}
-			_mouseDown = _mouseState.LeftButton == ButtonState.Pressed;
 		}
 
 		#endregion

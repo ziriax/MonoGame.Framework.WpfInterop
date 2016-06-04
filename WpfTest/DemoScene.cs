@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using MonoGame.Framework.WpfInterop;
+using MonoGame.Framework.WpfInterop.Input;
 
 namespace WpfTest
 {
@@ -18,10 +20,20 @@ namespace WpfTest
 		private VertexDeclaration _vertexDeclaration;
 		private Matrix _viewMatrix;
 		private Matrix _worldMatrix;
+		private WpfKeyboard _keyboard;
+		private KeyboardState _keyboardState;
+		private WpfMouse _mouse;
+		private MouseState _mouseState;
 
 		#endregion
 
 		#region Methods
+
+		protected override void Update(GameTime gameTime)
+		{
+			_mouseState = _mouse.GetState();
+			_keyboardState = _keyboard.GetState();
+		}
 
 		protected override void Dispose(bool disposing)
 		{
@@ -37,12 +49,14 @@ namespace WpfTest
 
 		protected override void Draw(GameTime time)
 		{
-			GraphicsDevice.Clear(Color.SteelBlue);
+			GraphicsDevice.Clear(_mouseState.LeftButton == ButtonState.Pressed ? Color.Black : Color.CornflowerBlue);
+
 			GraphicsDevice.RasterizerState = RasterizerState.CullNone;
 			GraphicsDevice.SetVertexBuffer(_vertexBuffer);
 
 			// Rotate cube around up-axis.
-			_basicEffect.World = Matrix.CreateRotationY((float)time.TotalGameTime.TotalMilliseconds / 1000 * MathHelper.TwoPi) * _worldMatrix;
+			var rot = _keyboardState.IsKeyDown(Keys.Space) ? 0 : (float)time.TotalGameTime.TotalMilliseconds / 1000 * MathHelper.TwoPi;
+			_basicEffect.World = Matrix.CreateRotationY(rot) * _worldMatrix;
 
 			foreach (var pass in _basicEffect.CurrentTechnique.Passes)
 			{
@@ -189,6 +203,9 @@ namespace WpfTest
 
 			_vertexBuffer = new VertexBuffer(GraphicsDevice, _vertexDeclaration, cubeVertices.Length, BufferUsage.None);
 			_vertexBuffer.SetData(cubeVertices);
+
+			_keyboard = new WpfKeyboard(this);
+			_mouse = new WpfMouse(this);
 		}
 
 		#endregion
