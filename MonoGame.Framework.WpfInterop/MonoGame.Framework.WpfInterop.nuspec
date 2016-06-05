@@ -11,6 +11,7 @@
 		<description>MonoGame integration with WPF. This package provides the D3D11Host from the MonoGame WpfInteropSample.</description>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<copyright>Copyright 2016</copyright>
+		<tags>monogame, wpf, interop</tags>
 		<dependencies />
 	</metadata>
 	<files>
