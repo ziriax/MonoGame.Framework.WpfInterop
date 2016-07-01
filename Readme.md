@@ -63,6 +63,10 @@ Now you can use it in any of your WPF forms:
 
 # Changelog
 
+**v1.1.1**
+
+* Added SetCursor function to WpfMouse which now allows resetting the cursor (the monogame Mouse.SetPosition function would throw due to not finding a Winforms window)
+
 **v1.1.0**
 
 * New class "WpfGame" that derives from D3D11Host. It provides a cleaner interface and is more similar to the original Game class

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using System;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -14,7 +15,7 @@ namespace MonoGame.Framework.WpfInterop.Input
 	{
 		#region Fields
 
-		private readonly IInputElement _focusElement;
+		private readonly UIElement _focusElement;
 
 		private MouseState _mouseState;
 
@@ -26,7 +27,7 @@ namespace MonoGame.Framework.WpfInterop.Input
 		/// Creates a new instance of the keyboard helper.
 		/// </summary>
 		/// <param name="focusElement">The element that will be used as the focus point. Provide your implementation of <see cref="WpfGame"/> here.</param>
-		public WpfMouse(IInputElement focusElement)
+		public WpfMouse(UIElement focusElement)
 		{
 			if (focusElement == null)
 				throw new ArgumentNullException(nameof(focusElement));
@@ -128,6 +129,21 @@ namespace MonoGame.Framework.WpfInterop.Input
 			var w = e as MouseWheelEventArgs;
 			_mouseState = new MouseState((int)pos.X, (int)pos.Y, m.ScrollWheelValue + w?.Delta ?? 0, (ButtonState)e.LeftButton, (ButtonState)e.MiddleButton, (ButtonState)e.RightButton, (ButtonState)e.XButton1, (ButtonState)e.XButton2);
 		}
+
+		/// <summary>
+		/// Sets the cursor to the specific coordinates within the attached game.
+		/// This is required as the monogame Mouse.SetPosition function relies on the underlying Winforms implementation and will not work with WPF.
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		public void SetCursor(int x, int y)
+		{
+			var p = _focusElement.PointToScreen(new Point(x, y));
+			SetCursorPos((int)p.X, (int)p.Y);
+		}
+
+		[DllImport("User32.dll")]
+		private static extern bool SetCursorPos(int x, int y);
 
 		#endregion
 	}
