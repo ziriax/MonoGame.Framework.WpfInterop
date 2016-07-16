@@ -63,6 +63,10 @@ Now you can use it in any of your WPF forms:
 
 # Changelog
 
+**v1.2.0**
+
+* Added dependency on MonoGame.Framework.WindowsDX nuget package to prevent accidental use of different platform versions
+
 **v1.1.1**
 
 * Added SetCursor function to WpfMouse which now allows resetting the cursor (the monogame Mouse.SetPosition function would throw due to not finding a Winforms window)

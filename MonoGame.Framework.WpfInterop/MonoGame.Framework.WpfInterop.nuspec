@@ -12,7 +12,9 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<copyright>Copyright 2016</copyright>
 		<tags>monogame, wpf, interop</tags>
-		<dependencies />
+		<dependencies>
+			<dependency id="MonoGame.Framework.WindowsDX" version="3.5.1.1679" />
+		</dependencies>
 	</metadata>
 	<files>
 		<file src="MonoGame.Framework.WpfInterop.dll;MonoGame.Framework.WpfInterop.xml" target="lib\net45" />
